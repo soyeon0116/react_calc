@@ -8,11 +8,11 @@ export class ExpenseForm extends Component {
       <form>
         <div className='form-center'>
             <div className='form-group'>
-                <lable htmlFor='charge'>지출 항목</lable>
+                <label htmlFor='charge'>지출 항목</label>
                 <input type="text" className='form-control' id='charge' name='charge' placeholder='예)렌트비'/>
             </div>
             <div className='form-group'>
-                <lable htmlFor='amount'>지출 항목</lable>
+                <label htmlFor='amount'>지출 항목</label>
                 <input type="number" className='form-control' id='amount' name='amount' placeholder='100'/>
             </div>
         </div>
