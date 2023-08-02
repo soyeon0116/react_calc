@@ -2,15 +2,19 @@ import { useState } from "react";
 import "./App.css";
 import ExpenseForm from './components/ExpenseForm';
 import ExpenseList from "./components/ExpenseList";
-import { Alert } from "./components/Alert";
+import Alert from "./components/Alert";
 
 const App = () => {
   
   const [charge,setCharge] = useState('');
 
+  const [id, setId] = useState('');
+
   const [amount, setamount] = useState(0);
 
-  const [alert, setAlert] = useState({show:false})
+  const [alert, setAlert] = useState({show:false});
+
+  const [edit, setEdit] = useState(false);
 
   //[변수 이름 getter, state를 정하는 함수 setter] = useState리액트 내장(value, setValue를 리턴하고 초기 state를 정하는 Hook)
   const [expenses, setExpenses] = useState([
@@ -31,13 +35,26 @@ const App = () => {
     e.preventDefault();
     if(charge !=="" && amount !== "")
     {
-      const newExpense = { id: crypto.randomUUID(),charge,amount};
-      //불변성 지켜주기 위해서 새로운 expenses 생성
-      const newExpenses = [...expenses,newExpense];
-      setExpenses(newExpenses);
+      if(edit)
+      {
+        const newExpenses = expenses.map(item => {
+          return item.id === id? {...item,charge,amount} : item;
+        });
+
+        setExpenses(newExpenses);
+        setEdit(false);
+        handleAlert({type:'success',text:'아이템이 수정되었습니다.'})
+      }
+      else
+      {
+        const newExpense = { id: crypto.randomUUID(),charge,amount};
+        //불변성 지켜주기 위해서 새로운 expenses 생성
+        const newExpenses = [...expenses,newExpense];
+        setExpenses(newExpenses);
+        handleAlert({type:'success',text:'아이템이 생성되었습니다.'})
+      }
       setCharge('');
       setamount(0);
-      handleAlert({type:'success',text:'아이템이 생성되었습니다.'})
     }
     else
     {
@@ -62,6 +79,15 @@ const App = () => {
     },7000)
   }
 
+  const handleEdit = (id) =>{
+    const expense = expenses.find(item => item.id === id);
+    const {charge, amount} = expense;
+    setId(id);
+    setCharge(charge);
+    setamount(amount);
+    setEdit(true);
+  }
+
     return (
       <main className="main-container">
         {alert.show ? <Alert type={alert.type} text={alert.text}/> : null}
@@ -73,6 +99,7 @@ const App = () => {
             handleAmount = {handleAmount}
             amount = {amount}
             handleSubmit ={handleSubmit}
+            edit={edit}
           />
         </div>
         <div style={{width:'100%', backgroundColor:'white',padding:'1rem'}}>
@@ -80,13 +107,19 @@ const App = () => {
           //initialExpense={this.initialExpense}
           initialExpense={expenses}
           handleDelete={handleDelete}
+          handleEdit={handleEdit}
         />
         </div>
 
         <div style={{display: 'flex',justifyContent:'end',marginTop:'1rem'}}>
           <p style={{fontSize: '2rem'}}>
             총 지출 : 
-            <span>원</span>
+            <span>
+              {expenses.reduce((acc,curr) =>{
+                return (acc += curr.amount)
+              },0)}
+              원
+              </span>
           </p>
         </div>
       </main>

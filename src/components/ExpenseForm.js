@@ -3,7 +3,7 @@ import './ExpenseForm.css'
 import { MdSend } from 'react-icons/md';
 
 //함수형 컴포넌트
-const ExpenseForm = ({handleCharge,charge,handleAmount,amount,handleSubmit}) => {
+const ExpenseForm = ({handleCharge,charge,handleAmount,amount,handleSubmit,edit}) => {
     return (
       <form onSubmit={handleSubmit}>
         <div className='form-center'>
@@ -16,12 +16,12 @@ const ExpenseForm = ({handleCharge,charge,handleAmount,amount,handleSubmit}) => 
                 <input type="number" className='form-control' id='amount' name='amount' placeholder='100' value={amount} onChange={handleAmount}/>
             </div>
         </div>
-        <button type='submit' className='btn'>제출<MdSend className='btn-icon'/></button>
+        <button type='submit' className='btn'>{edit ? "수정" :"제출"}<MdSend className='btn-icon'/></button>
       </form>
     )
 }
 //onChange={() =>{
 //  handleCharge()
 //}}
-// = onChange ={handelCharge}
+// = onChange ={handleCharge}
 export default ExpenseForm
